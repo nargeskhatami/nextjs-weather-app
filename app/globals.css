@@ -5,5 +5,5 @@
 
 body {
   /* color: rgb(var(--foreground-rgb)); */
-  @apply bg-gradient-to-r from-cyan-500 to-blue-500;
+  @apply bg-gradient-to-r from-indigo-400 to-cyan-400;
 }

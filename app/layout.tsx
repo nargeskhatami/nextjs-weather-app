@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import Loading from "./loading";
+import Header from "@/components/Header/Header";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -15,7 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} suppressHydrationWarning={true}>
+        <Header />
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </body>
     </html>
   );
 }
