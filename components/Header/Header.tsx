@@ -2,11 +2,11 @@
 import Link from "next/link";
 export default function Header() {
   return (
-    <header className="bg-white/25">
+    <header className="bg-white/25 w-full">
       <div className="container flex justify-between items-center">
         <Link href="/" className="flex items-center">
-          <img src="/PartlyCloudy.svg" alt="Logo" width={56} height={56} />
-          <span className="text-white px-2">Weather App</span>
+          <img src="/PartlyCloudy.svg" alt="Partly Cloudy" width={56} height={56} />
+          <h1 className="text-white px-2">Weather App</h1>
         </Link>
         <nav>
           <ul className="flex items-center">
