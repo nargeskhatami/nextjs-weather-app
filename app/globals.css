@@ -4,6 +4,8 @@
 
 
 body {
+  max-height: 100vh;
+  min-height: 100vh;
   /* color: rgb(var(--foreground-rgb)); */
-  @apply bg-gradient-to-r from-indigo-400 to-cyan-400;
+  @apply bg-gradient-to-r from-indigo-400 to-cyan-400 flex flex-col items-center justify-between;
 }
