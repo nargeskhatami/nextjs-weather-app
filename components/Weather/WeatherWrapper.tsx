@@ -86,39 +86,50 @@ function getWeatherCodeDescription(code: number | string) {
   }
 }
 async function getWeatherInfo() {
-  const options = { method: "GET", headers: { accept: "application/json" } };
-  const res = await fetch(
-    "https://api.tomorrow.io/v4/weather/forecast?location=newyork&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj",
-    options
-  );
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+  try {
+    const res = await fetch(
+      "https://api.tomorrow.io/v4/weather/forecast?location=newyork&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj",
+      { method: "GET", headers: { accept: "application/json" } }
+    );
+
+    let data: Weather = await res.json();
+    data.timelines.daily = data.timelines.daily.map((item) => {
+      return {
+        time: getDateFormat(item.time),
+        values: {
+          humidityAvg: Math.trunc(item.values.humidityAvg),
+          temperatureApparentAvg: Math.trunc(
+            item.values.temperatureApparentAvg
+          ),
+          temperatureAvg: Math.trunc(item.values.temperatureAvg),
+          visibilityAvg: Math.trunc(item.values.visibilityAvg),
+          windSpeedAvg: Math.trunc(item.values.windSpeedAvg),
+          weatherCodeMax: getWeatherCodeDescription(item.values.weatherCodeMax),
+        },
+      };
+    });
+    return data;
+  } catch {
+    return null;
   }
-  let data: Weather = await res.json();
-  data.timelines.daily = data.timelines.daily.map((item) => {
-    return {
-      time: getDateFormat(item.time),
-      values: {
-        humidityAvg: Math.trunc(item.values.humidityAvg),
-        temperatureApparentAvg: Math.trunc(item.values.temperatureApparentAvg),
-        temperatureAvg: Math.trunc(item.values.temperatureAvg),
-        visibilityAvg: Math.trunc(item.values.visibilityAvg),
-        windSpeedAvg: Math.trunc(item.values.windSpeedAvg),
-        weatherCodeMax: getWeatherCodeDescription(item.values.weatherCodeMax),
-      },
-    };
-  });
-  return data;
 }
 
 export default async function WeatherWrapper() {
-  const weatherInfo: Weather = await getWeatherInfo();
+  const weatherInfo: Weather | null = await getWeatherInfo();
+  const showWeather: boolean =
+    weatherInfo !== null && weatherInfo.timelines.daily.length > 0;
   return (
     <>
-      <WeatherCard
-        weatherInfo={weatherInfo.timelines.daily[0]}
-        locationInfo={weatherInfo.location}
-      />
+      {showWeather ? (
+        <WeatherCard
+          weatherInfo={weatherInfo.timelines.daily[0]}
+          locationInfo={weatherInfo.location}
+        />
+      ) : (
+        <div className="bg-red-500/20 p-3 text-red-800 rounded border-l-4 border-red-800">
+          Sorry, no weather data is available at the moment!
+        </div>
+      )}
     </>
   );
 }
