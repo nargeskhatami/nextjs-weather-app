@@ -5,7 +5,9 @@ export default function Header() {
     <header className="bg-white/25 w-full">
       <div className="container flex justify-between items-center">
         <Link href="/" className="flex items-center">
-          <img src="/PartlyCloudy.svg" alt="Partly Cloudy" width={56} height={56} />
+          <svg width={56} height={56}>
+            <use href={`/sprite.svg#partly-cloudy`} />
+          </svg>
           <h1 className="text-white px-2">Weather App</h1>
         </Link>
         <nav>

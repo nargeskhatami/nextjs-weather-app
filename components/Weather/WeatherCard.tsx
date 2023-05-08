@@ -1,3 +1,4 @@
+"use client";
 // A function that returns any string including white space so that the first letter of each word is capital and the rest are small
 const capitalizeWords = (str: string) => {
   let words = str.split(" ");
@@ -39,31 +40,19 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
       <div>
         <div className="flex items-center justify-center text-white divide-x divide-solid divide-white/ py-2">
           <div className="flex items-center justify-between px-3 w-2/4">
-            <img
-              src="/visibility.svg"
-              alt="visibility"
-              className="pr-1"
-              width={20}
-              height={20}
-            />
-            <span className="font-light text-sm block w-full">
-              Visibility
-            </span>
+            <svg width={24} height={24}>
+              <use href={`/sprite.svg#visibility`} />
+            </svg>
+            <span className="pl-1 font-light text-sm block w-full">Visibility</span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.visibilityAvg} {metricValues.visibility}
             </span>
           </div>
           <div className="flex items-center justify-between px-3 w-2/4">
-            <img
-              src="/apparent.svg"
-              alt="apparent"
-              className="pr-1"
-              width={20}
-              height={20}
-            />
-            <span className="font-light text-sm block w-full">
-              Feels like
-            </span>
+            <svg width={24} height={24}>
+              <use href={`/sprite.svg#apparent`} />
+            </svg>
+            <span className="pl-1 font-light text-sm block w-full">Feels like</span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.temperatureApparentAvg}
               {metricValues.apparentTemperature}
@@ -72,27 +61,19 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
         </div>
         <div className="flex items-center justify-center text-white divide-x divide-solid divide-white/60 py-2">
           <div className="flex items-center justify-between px-3 w-2/4">
-            <img
-              src="/humidity.svg"
-              alt="humidity"
-              className="pr-1"
-              width={20}
-              height={20}
-            />
-            <span className="font-light text-sm block w-full">Humidity</span>
+            <svg width={24} height={24}>
+              <use href={`/sprite.svg#humidity`} />
+            </svg>
+            <span className="pl-1 font-light text-sm block w-full">Humidity</span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.humidityAvg} {metricValues.humidity}
             </span>
           </div>
           <div className="flex items-center justify-between px-3 w-2/4">
-            <img
-              src="/wind.svg"
-              alt="wind"
-              className="pr-1"
-              width={20}
-              height={20}
-            />
-            <span className="font-light text-sm block w-full">Wind</span>
+            <svg width={24} height={24}>
+              <use href={`/sprite.svg#wind`} />
+            </svg>
+            <span className="pl-1 font-light text-sm block w-full">Wind</span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.windSpeedAvg} {metricValues.windSpeed}
             </span>
