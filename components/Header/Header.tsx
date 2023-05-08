@@ -13,6 +13,7 @@ export default function Header() {
             <li className="text-white px-2">
               <a
                 className="hover:underline"
+                target="_blank"
                 href="https://github.com/nargeskhatami/nextjs-weather-app"
               >
                 GitHub
