@@ -16,11 +16,51 @@ const metricValues = {
   windSpeed: "m/s",
   visibility: "km",
 };
+// A function that maps the weather code to the corresponding weather description
+function getIconName(code: string) {
+  switch (code) {
+    case "Mostly Clear":
+      return "sunny";
+    case "Partly Cloudy":
+    case "Mostly Cloudy":
+    case "Cloudy":
+      return "partly-cloudy";
+    case "Rain":
+    case "Light Rain":
+    case "Heavy Rain":
+      return "rainy";
+    case "Snow":
+    case "Flurries":
+    case "Light Snow":
+    case "Heavy Snow":
+      return "snowy";
+    case "Thunderstorm":
+      return "rain-thunder";
+    case "Freezing Drizzle":
+    case "Freezing Rain":
+    case "Light Freezing Rain":
+    case "Heavy Freezing Rain":
+    case "Ice Pellets":
+    case "Heavy Ice Pellets":
+    case "Light Ice Pellets":
+    case "Light Fog":
+    case "Drizzle":
+    case "Fog":
+    default:
+      return "";
+  }
+}
 export default function WeatherCard({ weatherInfo, locationInfo }) {
   return (
-    <figure className="flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4">
+    <figure className="flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
       <div className="flex items-center text-white">
-        <img src="/Sunny.svg" alt="Sunny" width={64} height={64} />
+        <svg width={56} height={56}>
+          <use
+            href={`/sprite.svg#${getIconName(
+              weatherInfo.values.weatherCodeMax
+            )}`}
+          />
+        </svg>
         <div className="pl-2">
           <h2 className="font-semibold">
             {capitalizeWords(locationInfo.name.split(",")[0])}
@@ -35,7 +75,7 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
             {metricValues.temperature}
           </span>
         </span>
-        <span className="">{weatherInfo.values.weatherCodeMax}</span>
+        <span>{weatherInfo.values.weatherCodeMax}</span>
       </div>
       <div>
         <div className="flex items-center justify-center text-white divide-x divide-solid divide-white/ py-2">
@@ -43,7 +83,9 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
             <svg width={24} height={24}>
               <use href={`/sprite.svg#visibility`} />
             </svg>
-            <span className="pl-1 font-light text-sm block w-full">Visibility</span>
+            <span className="pl-1 font-light text-sm block w-full">
+              Visibility
+            </span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.visibilityAvg} {metricValues.visibility}
             </span>
@@ -52,7 +94,9 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
             <svg width={24} height={24}>
               <use href={`/sprite.svg#apparent`} />
             </svg>
-            <span className="pl-1 font-light text-sm block w-full">Feels like</span>
+            <span className="pl-1 font-light text-sm block w-full">
+              Feels like
+            </span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.temperatureApparentAvg}
               {metricValues.apparentTemperature}
@@ -64,7 +108,9 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
             <svg width={24} height={24}>
               <use href={`/sprite.svg#humidity`} />
             </svg>
-            <span className="pl-1 font-light text-sm block w-full">Humidity</span>
+            <span className="pl-1 font-light text-sm block w-full">
+              Humidity
+            </span>
             <span className="font-light text-sm whitespace-nowrap">
               {weatherInfo.values.humidityAvg} {metricValues.humidity}
             </span>
