@@ -1,9 +1,9 @@
-import WeatherWrapper from "../components/Weather/WeatherWrapper";
+import WeatherCardWrapper from "../components/Weather/WeatherCardWrapper";
 
 export default function Home() {
   return (
     <main className="p-24">
-      <WeatherWrapper />
+      <WeatherCardWrapper />
     </main>
   );
 }

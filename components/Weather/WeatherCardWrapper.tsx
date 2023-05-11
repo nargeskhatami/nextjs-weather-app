@@ -1,4 +1,5 @@
 import WeatherCard from "./WeatherCard";
+import WeatherCardAdd from "./WeatherCardAdd";
 import { Weather } from "../../types/Weather";
 // A function that converts a date with “YYYY-MM-DDTHH:mm:ssZ” format to date with “dddd MM/DD/YYYY” format
 const getDateFormat = (date: string) => {
@@ -33,8 +34,6 @@ const getDateFormat = (date: string) => {
 // A function that maps the weather code to the corresponding weather description
 function getWeatherCodeDescription(code: number | string) {
   switch (String(code)) {
-    case "0":
-      return "Unknown";
     case "1000":
       return "Clear, Sunny";
     case "1100":
@@ -81,6 +80,7 @@ function getWeatherCodeDescription(code: number | string) {
       return "Light Ice Pellets";
     case "8000":
       return "Thunderstorm";
+    case "0":
     default:
       return "Unknown";
   }
@@ -88,7 +88,7 @@ function getWeatherCodeDescription(code: number | string) {
 async function getWeatherInfo() {
   try {
     const res = await fetch(
-      "https://api.tomorrow.io/v4/weather/forecast?location=newyork&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj",
+      "https://api.tomorrow.io/v4/weather/forecast?location=paris&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj",
       { method: "GET", headers: { accept: "application/json" } }
     );
 
@@ -108,18 +108,20 @@ async function getWeatherInfo() {
         },
       };
     });
+    console.log(data);
+
     return data;
   } catch {
     return null;
   }
 }
 
-export default async function WeatherWrapper() {
+export default async function WeatherCardWrapper() {
   const weatherInfo: Weather | null = await getWeatherInfo();
   const showWeather: boolean =
     weatherInfo !== null && weatherInfo.timelines.daily.length > 0;
   return (
-    <>
+    <div className="flex">
       {showWeather ? (
         <WeatherCard
           weatherInfo={weatherInfo.timelines.daily[0]}
@@ -130,6 +132,7 @@ export default async function WeatherWrapper() {
           Sorry, no weather data is available at the moment!
         </div>
       )}
-    </>
+      <WeatherCardAdd />
+    </div>
   );
 }
