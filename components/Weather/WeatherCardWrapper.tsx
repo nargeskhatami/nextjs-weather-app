@@ -1,12 +1,12 @@
+"use client";
 import WeatherCard from "./WeatherCard";
 import WeatherCardAdd from "./WeatherCardAdd";
-import { Weather } from "../../types/Weather";
+import { useCallback, useEffect, useReducer, useState } from "react";
+
 // A function that converts a date with “YYYY-MM-DDTHH:mm:ssZ” format to date with “dddd MM/DD/YYYY” format
 const getDateFormat = (date: string) => {
-  // Create a new Date object from the input string
   let dateObj = new Date(date);
 
-  // Define an array of weekdays
   let weekdays = [
     "Sunday",
     "Monday",
@@ -85,54 +85,83 @@ function getWeatherCodeDescription(code: number | string) {
       return "Unknown";
   }
 }
-async function getWeatherInfo() {
-  try {
-    const res = await fetch(
-      "https://api.tomorrow.io/v4/weather/forecast?location=paris&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj",
-      { method: "GET", headers: { accept: "application/json" } }
-    );
-
-    let data: Weather = await res.json();
-    data.timelines.daily = data.timelines.daily.map((item) => {
-      return {
-        time: getDateFormat(item.time),
-        values: {
-          humidityAvg: Math.trunc(item.values.humidityAvg),
-          temperatureApparentAvg: Math.trunc(
-            item.values.temperatureApparentAvg
-          ),
-          temperatureAvg: Math.trunc(item.values.temperatureAvg),
-          visibilityAvg: Math.trunc(item.values.visibilityAvg),
-          windSpeedAvg: Math.trunc(item.values.windSpeedAvg),
-          weatherCodeMax: getWeatherCodeDescription(item.values.weatherCodeMax),
-        },
-      };
-    });
-    console.log(data);
-
-    return data;
-  } catch {
-    return null;
-  }
-}
-
+const citiesReducer = (state, action) => {
+  if (action.type === "SET") return action.cities;
+  if (action.type === "ADD") return [...state, action.city];
+  if (action.type === "DELETE") return [...state].splice(action.index, 1);
+};
 export default async function WeatherCardWrapper() {
-  const weatherInfo: Weather | null = await getWeatherInfo();
-  const showWeather: boolean =
-    weatherInfo !== null && weatherInfo.timelines.daily.length > 0;
+  console.log('WeatherCardWrapper');
+  
+  const [cities, dispatch] = useReducer(citiesReducer, []);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  const onCitySelect = useCallback((city) => {
+    console.log("city", city);
+    setSelectedCity(city);
+  }, []);
+
+  const removeCity = useCallback((index) => {
+    dispatch({ type: "DELETE", index });
+  }, []);
+
+  useEffect(() => {
+    const city = selectedCity || "paris";
+    fetch(
+      `https://api.tomorrow.io/v4/weather/forecast?location=${city}&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj`,
+      { method: "GET", headers: { accept: "application/json" } }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        data.timelines.daily = data.timelines.daily.map((item) => {
+          return {
+            time: getDateFormat(item.time),
+            values: {
+              humidityAvg: Math.trunc(item.values.humidityAvg),
+              temperatureApparentAvg: Math.trunc(
+                item.values.temperatureApparentAvg
+              ),
+              temperatureAvg: Math.trunc(item.values.temperatureAvg),
+              visibilityAvg: Math.trunc(item.values.visibilityAvg),
+              windSpeedAvg: Math.trunc(item.values.windSpeedAvg),
+              weatherCodeMax: getWeatherCodeDescription(
+                item.values.weatherCodeMax
+              ),
+            },
+          };
+        });
+        console.log("data", data);
+        dispatch({ type: "ADD", city: data });
+      })
+      .catch(() => {
+        console.log("error");
+        dispatch({ type: "SET", cities: [] });
+        console.log("cities", cities);
+      });
+  }, [selectedCity]);
+
   return (
     <div className="flex">
-      {showWeather ? (
-        <WeatherCard
-          weatherInfo={weatherInfo.timelines.daily[0]}
-          locationInfo={weatherInfo.location}
-        />
-      ) : (
-        <div className="bg-red-500/20 p-3 text-red-800 rounded border-l-4 border-red-800">
-          Sorry, no weather data is available at the moment!
+      {cities.length === 0 ? (
+        <div className="text-white/70">
+          Sorry, Weather data is not available at the moment!
         </div>
+      ) : (
+        cities.map((city, index: number) => (
+          <WeatherCard
+          index={index}
+            key={`WeatherCard${index}`}
+            weatherInfo={city.timelines.daily[0]}
+            locationInfo={city.location}
+            onRemoveCity={() => {
+              removeCity(index);
+            }}
+          />
+        ))
       )}
-      <WeatherCardAdd />
+      {cities.length > 0 && cities.length < 3 ? (
+        <WeatherCardAdd onCitySelect={onCitySelect} />
+      ) : null}
     </div>
   );
 }
