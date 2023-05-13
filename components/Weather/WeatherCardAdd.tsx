@@ -31,7 +31,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
   useEffect(() => {
     if (searchTerm) {
       fetch(
-        `http://geodb-free-service.wirefreethought.com/v1/geo/cities?types=CITY&sort=name&&namePrefix=${searchTerm}`
+        `http://geodb-free-service.wirefreethought.com/v1/geo/cities?types=CITY&sort=name&namePrefix=${searchTerm}`
       )
         .then((res) => res.json())
         .then((items) => {
