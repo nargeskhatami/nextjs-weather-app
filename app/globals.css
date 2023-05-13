@@ -2,10 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-
+body,
+html {
+  overflow-x: hidden;
+}
 body {
   max-height: 100vh;
   min-height: 100vh;
   /* color: rgb(var(--foreground-rgb)); */
   @apply bg-gradient-to-r from-indigo-400 to-cyan-400 flex flex-col items-center justify-between;
+}
+@layer base {
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-xl bg-white/10 shadow-sm;
+  }
+  ::-webkit-scrollbar {
+    @apply rounded-xl w-2 bg-white/10;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-xl bg-white/50;
+  }
+}
+.spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.5);
+  border-top-color: white;
+  animation: 1.5s spin infinite linear;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
