@@ -85,7 +85,7 @@ function getWeatherCodeDescription(code: number | string) {
       return "Unknown";
   }
 }
-function getCityWeatherInfo(city) {
+function getCityWeatherInfo(city:any) {
   return new Promise<void>((resolve, reject) => {
     fetch(
       `https://api.tomorrow.io/v4/weather/forecast?location=${city}&timesteps=1d&apikey=Ktd2ZRL88KbM7rJcFey0VA0dZEPlD9uy`,
@@ -93,7 +93,7 @@ function getCityWeatherInfo(city) {
     )
       .then((res) => res.json())
       .then((data) => {
-        data.timelines.daily = data.timelines.daily.map((item) => {
+        data.timelines.daily = data.timelines.daily.map((item:any) => {
           return {
             time: getDateFormat(item.time),
             values: {
@@ -117,7 +117,7 @@ function getCityWeatherInfo(city) {
       });
   });
 }
-const citiesReducer = (state, action) => {
+const citiesReducer = (state:any, action:any) => {
   if (action.type === "SET") return action.cities;
   if (action.type === "ADD") return [...state, action.city];
   if (action.type === "DELETE") {
@@ -133,7 +133,7 @@ export default function WeatherCardWrapper() {
   const [cities, dispatch] = useReducer(citiesReducer, []);
   const [selectedCity, setSelectedCity] = useState(null);
 
-  const onCitySelect = useCallback((city) => {
+  const onCitySelect = useCallback((city:any) => {
     setSelectedCity(city);
   }, []);
 
@@ -196,9 +196,6 @@ export default function WeatherCardWrapper() {
               case error.TIMEOUT:
                 alert("The request to get user location timed out.");
                 break;
-              case error.UNKNOWN_ERROR:
-                alert("An unknown error occurred.");
-                break;
             }
             setPageState("error");
           }
@@ -217,7 +214,7 @@ export default function WeatherCardWrapper() {
       )}
       {pageState === "initialLoading" && <div className="spinner"></div>}
       {pageState === "showData" &&
-        cities.map((city, index: number) => (
+        cities.map((city:any, index: number) => (
           <WeatherCard
             index={index}
             key={`WeatherCard${index}`}

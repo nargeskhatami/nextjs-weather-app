@@ -8,7 +8,7 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
 
-export default function WeatherCardAdd({ onCitySelect, getDataStatus }) {
+export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
   const inputRef = useRef(null);
   const [toggleSearchBar, setToggleSearchBar] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,7 +24,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }) {
   };
   useEffect(() => {
     if (!toggleSearchBar && inputRef && inputRef.current) {
-      inputRef.current.focus();
+      (inputRef.current as any).focus();
     }
   }, [toggleSearchBar]);
 
@@ -48,14 +48,14 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }) {
     }
   }, [debouncedSearchTerm]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:any) => {
     setSearchLoading(true);
     setSearchTerm(e.target.value);
   };
 
-  const selectCity = (city) => {
+  const selectCity = (city:any) => {
     setSearchTerm("");
-    inputRef.current.value = null;
+    (inputRef.current as any).value = null;
     onCitySelect(city);
   };
 
@@ -106,7 +106,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }) {
           ) : searchTerm ? (
             !searchLoading && cities.length ? (
               <ul className="h-full w-full divide-y divide-white/20 overflow-auto max-h-[304px] pr-1">
-                {cities.map((item) => (
+                {cities.map((item:any) => (
                   <li
                     key={item.id}
                     className="cursor-pointer transition-all p-3 flex flex-col hover:bg-white/10"

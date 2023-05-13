@@ -59,7 +59,7 @@ export default function WeatherCard({
   locationInfo,
   onRemoveCity,
   index,
-}) {
+}:any) {
   return (
     <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
       {index > 0 && (
