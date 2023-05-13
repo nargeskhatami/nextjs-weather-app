@@ -8,7 +8,7 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
 
-export default function WeatherCardAdd({ onCitySelect }) {
+export default function WeatherCardAdd({ onCitySelect, getDataStatus }) {
   const inputRef = useRef(null);
   const [toggleSearchBar, setToggleSearchBar] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,7 +96,14 @@ export default function WeatherCardAdd({ onCitySelect }) {
               placeholder="Search"
             />
           </div>
-          {searchTerm ? (
+          {getDataStatus === "loadingCity" ? (
+            <div className="m-auto flex flex-col items-center justify-center">
+              <div className="spinner"></div>
+              <span className="text-white/70 mt-2">
+                Loading weather info ...
+              </span>
+            </div>
+          ) : searchTerm ? (
             !searchLoading && cities.length ? (
               <ul className="h-full w-full divide-y divide-white/20 overflow-auto max-h-[304px] pr-1">
                 {cities.map((item) => (

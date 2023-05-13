@@ -85,30 +85,10 @@ function getWeatherCodeDescription(code: number | string) {
       return "Unknown";
   }
 }
-const citiesReducer = (state, action) => {
-  if (action.type === "SET") return action.cities;
-  if (action.type === "ADD") return [...state, action.city];
-  if (action.type === "DELETE") return [...state].splice(action.index, 1);
-};
-export default async function WeatherCardWrapper() {
-  console.log('WeatherCardWrapper');
-  
-  const [cities, dispatch] = useReducer(citiesReducer, []);
-  const [selectedCity, setSelectedCity] = useState(null);
-
-  const onCitySelect = useCallback((city) => {
-    console.log("city", city);
-    setSelectedCity(city);
-  }, []);
-
-  const removeCity = useCallback((index) => {
-    dispatch({ type: "DELETE", index });
-  }, []);
-
-  useEffect(() => {
-    const city = selectedCity || "paris";
+function getCityWeatherInfo(city) {
+  return new Promise<void>((resolve, reject) => {
     fetch(
-      `https://api.tomorrow.io/v4/weather/forecast?location=${city}&timesteps=1d&apikey=tQJElj20QSULiaRiBukhKZW8yQC0nLkj`,
+      `https://api.tomorrow.io/v4/weather/forecast?location=${city}&timesteps=1d&apikey=Ktd2ZRL88KbM7rJcFey0VA0dZEPlD9uy`,
       { method: "GET", headers: { accept: "application/json" } }
     )
       .then((res) => res.json())
@@ -130,26 +110,116 @@ export default async function WeatherCardWrapper() {
             },
           };
         });
-        console.log("data", data);
-        dispatch({ type: "ADD", city: data });
+        resolve(data);
       })
       .catch(() => {
-        console.log("error");
-        dispatch({ type: "SET", cities: [] });
-        console.log("cities", cities);
+        reject();
       });
+  });
+}
+const citiesReducer = (state, action) => {
+  if (action.type === "SET") return action.cities;
+  if (action.type === "ADD") return [...state, action.city];
+  if (action.type === "DELETE") {
+    const citiesState = [...state];
+    citiesState.splice(action.index, 1);
+    return citiesState;
+  }
+};
+export default function WeatherCardWrapper() {
+  const [pageState, setPageState] = useState("waitingLocation");
+  const [cityWeatherInfoStatus, setCityWeatherInfoStatus] =
+    useState("showData");
+  const [cities, dispatch] = useReducer(citiesReducer, []);
+  const [selectedCity, setSelectedCity] = useState(null);
+
+  const onCitySelect = useCallback((city) => {
+    setSelectedCity(city);
+  }, []);
+
+  const removeCity = useCallback((index: number) => {
+    dispatch({ type: "DELETE", index });
+  }, []);
+
+  useEffect(() => {
+    let city = "Tehran";
+    if (selectedCity) {
+      setCityWeatherInfoStatus("loadingCity");
+      getCityWeatherInfo(selectedCity)
+        .then((data) => {
+          dispatch({ type: "ADD", city: data });
+          setCityWeatherInfoStatus("showData");
+        })
+        .catch(() => {
+          setCityWeatherInfoStatus("failed");
+        });
+    } else {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            setPageState("initialLoading");
+            fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+            )
+              .then((response) => response.json())
+              .then((cityData) => {
+                city =
+                  cityData.address.city ||
+                  cityData.address.town ||
+                  cityData.address.village;
+                getCityWeatherInfo(city)
+                  .then((data) => {
+                    dispatch({ type: "ADD", city: data });
+                    setPageState("showData");
+                  })
+                  .catch(() => {
+                    if (cities.length > 0)
+                      dispatch({ type: "SET", cities: [] });
+                    setPageState("error");
+                  });
+              })
+              .catch((error) => {
+                console.error(error);
+                setPageState("error");
+              });
+          },
+          (error) => {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                alert("User denied the request for Geolocation.");
+                break;
+              case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+              case error.TIMEOUT:
+                alert("The request to get user location timed out.");
+                break;
+              case error.UNKNOWN_ERROR:
+                alert("An unknown error occurred.");
+                break;
+            }
+            setPageState("error");
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+        setPageState("error");
+      }
+    }
   }, [selectedCity]);
 
   return (
     <div className="flex">
-      {cities.length === 0 ? (
-        <div className="text-white/70">
-          Sorry, Weather data is not available at the moment!
-        </div>
-      ) : (
+      {pageState === "waitingLocation" && (
+        <div className="text-white/70">Waiting for user's location ...</div>
+      )}
+      {pageState === "initialLoading" && <div className="spinner"></div>}
+      {pageState === "showData" &&
         cities.map((city, index: number) => (
           <WeatherCard
-          index={index}
+            index={index}
             key={`WeatherCard${index}`}
             weatherInfo={city.timelines.daily[0]}
             locationInfo={city.location}
@@ -157,11 +227,18 @@ export default async function WeatherCardWrapper() {
               removeCity(index);
             }}
           />
-        ))
-      )}
+        ))}
       {cities.length > 0 && cities.length < 3 ? (
-        <WeatherCardAdd onCitySelect={onCitySelect} />
+        <WeatherCardAdd
+          getDataStatus={cityWeatherInfoStatus}
+          onCitySelect={onCitySelect}
+        />
       ) : null}
+      {pageState === "error" && (
+        <div className="text-white/70">
+          Sorry, Weather data is not available at the moment!
+        </div>
+      )}
     </div>
   );
 }
