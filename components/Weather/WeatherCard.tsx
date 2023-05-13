@@ -1,4 +1,7 @@
 "use client";
+
+import { TrashIcon } from "@heroicons/react/24/solid";
+
 // A function that returns any string including white space so that the first letter of each word is capital and the rest are small
 const capitalizeWords = (str: string) => {
   let words = str.split(" ");
@@ -20,6 +23,7 @@ const metricValues = {
 function getIconName(code: string) {
   switch (code) {
     case "Mostly Clear":
+    case "Clear, Sunny":
       return "sunny";
     case "Partly Cloudy":
     case "Mostly Cloudy":
@@ -50,9 +54,20 @@ function getIconName(code: string) {
       return "";
   }
 }
-export default function WeatherCard({ weatherInfo, locationInfo }) {
+export default function WeatherCard({
+  weatherInfo,
+  locationInfo,
+  onRemoveCity,
+  index,
+}) {
   return (
-    <figure className="flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
+    <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
+      {index > 0 && (
+        <TrashIcon
+          onClick={onRemoveCity}
+          className="absolute h-[20px] right-5 text-white/80 cursor-pointer transition-all hover:text-white"
+        />
+      )}
       <div className="flex items-center text-white">
         <svg width={56} height={56}>
           <use
@@ -78,7 +93,7 @@ export default function WeatherCard({ weatherInfo, locationInfo }) {
         <span>{weatherInfo.values.weatherCodeMax}</span>
       </div>
       <div>
-        <div className="flex items-center justify-center text-white divide-x divide-solid divide-white/ py-2">
+        <div className="flex items-center justify-center text-white divide-x divide-solid divide-white/60 py-2">
           <div className="flex items-center justify-between px-3 w-2/4">
             <svg width={24} height={24}>
               <use href={`/sprite.svg#visibility`} />
