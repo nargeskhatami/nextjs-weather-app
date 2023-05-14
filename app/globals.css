@@ -11,7 +11,7 @@ html {
   src: url("/fonts/Vazirmatn[wght].woff2");
 }
 body {
-  font-family: "Vazir" !important;
+  font-family: "Vazir";
   max-height: 100vh;
   min-height: 100vh;
   @apply bg-gradient-to-r from-indigo-400 to-cyan-400 flex flex-col items-center justify-between;
