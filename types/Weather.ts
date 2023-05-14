@@ -14,7 +14,7 @@ interface Timelines {
   daily: Daily[];
 }
 
-interface Daily {
+export interface Daily {
   time: string;
   values: Values;
 }

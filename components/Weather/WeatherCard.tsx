@@ -1,5 +1,6 @@
 "use client";
 
+import { Daily } from "@/types/Weather";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 // A function that returns any string including white space so that the first letter of each word is capital and the rest are small
@@ -20,7 +21,7 @@ const metricValues = {
   visibility: "km",
 };
 // A function that maps the weather code to the corresponding weather description
-function getIconName(code: string) {
+function getIconName(code: string | number) {
   switch (code) {
     case "Mostly Clear":
     case "Clear, Sunny":
@@ -59,12 +60,19 @@ export default function WeatherCard({
   locationInfo,
   onRemoveCity,
   index,
-}:any) {
+}: {
+  weatherInfo: Daily;
+  locationInfo: { name: string };
+  onRemoveCity: Function;
+  index: number;
+}) {
   return (
     <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
       {index > 0 && (
         <TrashIcon
-          onClick={onRemoveCity}
+          onClick={() => {
+            onRemoveCity();
+          }}
           className="absolute h-[20px] right-5 text-white/80 cursor-pointer transition-all hover:text-white"
         />
       )}

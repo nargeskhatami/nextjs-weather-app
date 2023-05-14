@@ -9,8 +9,14 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
 
-export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
-  const inputRef = useRef(null);
+export default function WeatherCardAdd({
+  onCitySelect,
+  getDataStatus,
+}: {
+  onCitySelect: Function;
+  getDataStatus: string;
+}) {
+  const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
   const [toggleSearchBar, setToggleSearchBar] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
@@ -25,7 +31,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
   };
   useEffect(() => {
     if (!toggleSearchBar && inputRef && inputRef.current) {
-      (inputRef.current as any).focus();
+      inputRef.current.focus();
     }
   }, [toggleSearchBar]);
 
@@ -39,8 +45,6 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
       })
         .then((res) => res.json())
         .then((items) => {
-          console.log(items);
-          
           setCities(items);
           setSearchLoading(false);
         })
@@ -54,14 +58,13 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
     }
   }, [debouncedSearchTerm]);
 
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLoading(true);
     setSearchTerm(e.target.value);
   };
 
-  const selectCity = (city: any) => {
+  const selectCity = (city: string) => {
     setSearchTerm("");
-    (inputRef.current as any).value = null;
     onCitySelect(city);
   };
 
@@ -112,7 +115,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
           ) : searchTerm ? (
             !searchLoading && cities.length ? (
               <ul className="h-full w-full divide-y divide-white/20 overflow-auto max-h-[304px] pr-1">
-                {cities.map((item: any) => (
+                {cities.map((item) => (
                   <li
                     key={`${item.country}-${item.name}`}
                     className="cursor-pointer transition-all p-3 flex flex-col hover:bg-white/10"
