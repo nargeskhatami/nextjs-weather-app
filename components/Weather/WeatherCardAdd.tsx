@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useRef, useReducer } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
+import { useState, useEffect, useRef } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { City } from "@/types/City";
 import styles from "./search.module.scss";
 import {
   MagnifyingGlassIcon,
@@ -8,12 +9,12 @@ import {
   ChevronLeftIcon,
 } from "@heroicons/react/24/solid";
 
-export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
+export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
   const inputRef = useRef(null);
   const [toggleSearchBar, setToggleSearchBar] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState<City[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const showSearchBar = () => {
@@ -31,11 +32,29 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
   useEffect(() => {
     if (searchTerm) {
       fetch(
-        `http://geodb-free-service.wirefreethought.com/v1/geo/cities?types=CITY&sort=name&namePrefix=${searchTerm}`
+        `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?types=CITY&minPopulation=500000&limit=10&sort=+population&namePrefix=${searchTerm}`,
+        {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key":
+              "0a75f26d1dmshd4079b389b615d5p1cfd8cjsndfe4aeb86b85",
+            "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+          },
+        }
       )
         .then((res) => res.json())
         .then((items) => {
-          setCities(items.data);
+          // create a new array of objects that have unique combinations of name and country properties
+          let unique: City[] = [];
+          let seen = new Set();
+          for (let obj of items.data) {
+            let key = obj.name + "|" + obj.country;
+            if (!seen.has(key)) {
+              unique.push(obj);
+              seen.add(key);
+            }
+          }
+          setCities(unique);
           setSearchLoading(false);
         })
         .catch(() => {
@@ -48,12 +67,12 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
     }
   }, [debouncedSearchTerm]);
 
-  const handleInputChange = (e:any) => {
+  const handleInputChange = (e: any) => {
     setSearchLoading(true);
     setSearchTerm(e.target.value);
   };
 
-  const selectCity = (city:any) => {
+  const selectCity = (city: any) => {
     setSearchTerm("");
     (inputRef.current as any).value = null;
     onCitySelect(city);
@@ -106,7 +125,7 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
           ) : searchTerm ? (
             !searchLoading && cities.length ? (
               <ul className="h-full w-full divide-y divide-white/20 overflow-auto max-h-[304px] pr-1">
-                {cities.map((item:any) => (
+                {cities.map((item: any) => (
                   <li
                     key={item.id}
                     className="cursor-pointer transition-all p-3 flex flex-col hover:bg-white/10"
@@ -114,8 +133,10 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }:any) {
                       selectCity(item.city);
                     }}
                   >
-                    <span className="text-white">{item.city}</span>
-                    <span className="text-white/70">{item.country}</span>
+                    <span className="text-white">{item.name}</span>
+                    <span className="text-white/70 text-sm">
+                      {item.region}, {item.country}
+                    </span>
                   </li>
                 ))}
               </ul>
