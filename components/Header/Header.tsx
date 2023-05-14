@@ -8,7 +8,7 @@ export default function Header() {
           <svg width={56} height={56}>
             <use href={`/sprite.svg#partly-cloudy`} />
           </svg>
-          <h1 className="text-white px-2">Weather App</h1>
+          <h1 className="text-white px-2">NextWeather</h1>
         </Link>
         <nav>
           <ul className="flex items-center">
