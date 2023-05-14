@@ -31,30 +31,17 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
 
   useEffect(() => {
     if (searchTerm) {
-      fetch(
-        `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?types=CITY&minPopulation=500000&limit=10&sort=+population&namePrefix=${searchTerm}`,
-        {
-          method: "GET",
-          headers: {
-            "X-RapidAPI-Key":
-              "0a75f26d1dmshd4079b389b615d5p1cfd8cjsndfe4aeb86b85",
-            "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
-          },
-        }
-      )
+      fetch(`https://api.api-ninjas.com/v1/city?name=${searchTerm}`, {
+        method: "GET",
+        headers: {
+          "X-Api-Key": "FTICZPK5ZJAT6FK5HK4FUw==GtbRMMQoUnAnX2n0",
+        },
+      })
         .then((res) => res.json())
         .then((items) => {
-          // create a new array of objects that have unique combinations of name and country properties
-          let unique: City[] = [];
-          let seen = new Set();
-          for (let obj of items.data) {
-            let key = obj.name + "|" + obj.country;
-            if (!seen.has(key)) {
-              unique.push(obj);
-              seen.add(key);
-            }
-          }
-          setCities(unique);
+          console.log(items);
+          
+          setCities(items);
           setSearchLoading(false);
         })
         .catch(() => {
@@ -127,15 +114,15 @@ export default function WeatherCardAdd({ onCitySelect, getDataStatus }: any) {
               <ul className="h-full w-full divide-y divide-white/20 overflow-auto max-h-[304px] pr-1">
                 {cities.map((item: any) => (
                   <li
-                    key={item.id}
+                    key={`${item.country}-${item.name}`}
                     className="cursor-pointer transition-all p-3 flex flex-col hover:bg-white/10"
                     onClick={() => {
-                      selectCity(item.city);
+                      selectCity(item.name);
                     }}
                   >
                     <span className="text-white">{item.name}</span>
                     <span className="text-white/70 text-sm">
-                      {item.region}, {item.country}
+                      {item.country}
                     </span>
                   </li>
                 ))}
