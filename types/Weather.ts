@@ -16,10 +16,10 @@ interface Timelines {
 
 export interface Daily {
   time: string;
-  values: Values;
+  values: WeatherValues;
 }
 
-interface Values {
+interface WeatherValues {
   humidityAvg: number;
   temperatureApparentAvg: number;
   temperatureAvg: number;
@@ -27,3 +27,10 @@ interface Values {
   windSpeedAvg: number;
   weatherCodeMax: string | number;
 }
+
+export interface Action {
+  type: 'SET' | 'ADD' | 'DELETE'; // a union type of the possible values for the type property
+  cities?: Weather[];
+  city?: Weather; 
+  index?: number;
+};
