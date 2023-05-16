@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useDebounce } from "@/hooks/useDebounce";
-import { City } from "@/types/City";
+
+import { MagnifyingGlassIcon, PlusIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
+
 import styles from "./search.module.scss";
-import {
-  MagnifyingGlassIcon,
-  PlusIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/24/solid";
+
+import { useDebounce } from "@/hooks/useDebounce";
+
+import { City } from "@/types/City";
 
 export default function WeatherCardAdd({
   onCitySelect,
@@ -35,23 +35,20 @@ export default function WeatherCardAdd({
     }
   }, [toggleSearchBar]);
 
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`api/city/search?namePrefix=${searchTerm}`);
+      const items = await res.json();
+      setCities(items);
+      setSearchLoading(false);
+    } catch (error) {
+      setCities([]);
+      setSearchLoading(false);
+    }
+  };
   useEffect(() => {
     if (searchTerm) {
-      fetch(`https://api.api-ninjas.com/v1/city?name=${searchTerm}`, {
-        method: "GET",
-        headers: {
-          "X-Api-Key": "FTICZPK5ZJAT6FK5HK4FUw==GtbRMMQoUnAnX2n0",
-        },
-      })
-        .then((res) => res.json())
-        .then((items) => {
-          setCities(items);
-          setSearchLoading(false);
-        })
-        .catch(() => {
-          setCities([]);
-          setSearchLoading(false);
-        });
+      fetchData();
     } else {
       setCities([]);
       setSearchLoading(false);
@@ -75,10 +72,7 @@ export default function WeatherCardAdd({
       } rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2`}
     >
       {toggleSearchBar && (
-        <button
-          className="flex flex-col justify-center items-center group"
-          onClick={showSearchBar}
-        >
+        <button className="flex flex-col justify-center items-center group" onClick={showSearchBar}>
           <div className="transition-all flex justify-center items-center rounded-full bg-white/20 h-[100px] w-[100px] text-white group-hover:bg-white/30">
             <PlusIcon className="text-white w-[72px] h-[72px]" />
           </div>
@@ -108,9 +102,7 @@ export default function WeatherCardAdd({
           {getDataStatus === "loadingCity" ? (
             <div className="m-auto flex flex-col items-center justify-center">
               <div className="spinner"></div>
-              <span className="text-white/70 mt-2">
-                Loading weather info ...
-              </span>
+              <span className="text-white/70 mt-2">Loading weather info ...</span>
             </div>
           ) : searchTerm ? (
             !searchLoading && cities.length ? (
@@ -124,9 +116,7 @@ export default function WeatherCardAdd({
                     }}
                   >
                     <span className="text-white">{item.name}</span>
-                    <span className="text-white/70 text-sm">
-                      {item.country}
-                    </span>
+                    <span className="text-white/70 text-sm">{item.country}</span>
                   </li>
                 ))}
               </ul>
