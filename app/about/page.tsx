@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <div className="w-60 text-white b bg-white/10 rounded-xl p-12">
+    <div className="w-3/5 text-white bg-white/10 rounded-xl p-12">
       <h2 className="w-fit mx-auto text-2xl mb-6 font-semibold">About</h2>
       <p className="text-justify mx-auto leading-relaxed">
         Welcome to NextWeather, a simple and elegant weather app built with
