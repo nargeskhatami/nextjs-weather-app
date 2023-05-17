@@ -1,4 +1,4 @@
-import { WeatherContainer } from "@/components/Weather/WeatherContainer";
+import { WeatherContainer } from "@/components/WeatherContainer";
 
 export default function Home() {
   return (

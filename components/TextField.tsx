@@ -1,4 +1,4 @@
-import styles from "./TextField.module.scss";
+import "@/styles/textfield.scss";
 import { ChangeEventHandler, MouseEventHandler, RefObject } from "react";
 
 export const TextField = ({
@@ -19,9 +19,13 @@ export const TextField = ({
   inputRef: RefObject<HTMLInputElement>;
 }) => {
   return (
-    <div className={styles["input-group"]}>
-      {append && <div className={styles["input-group__append"]}>{append}</div>}
-      {prepend && <div onClick={prependClicked} className={styles["input-group__prepend"]}>{prepend}</div>}
+    <div className="input-group">
+      {append && <div className="input-group__append">{append}</div>}
+      {prepend && (
+        <div onClick={prependClicked} className="input-group__prepend">
+          {prepend}
+        </div>
+      )}
       <input
         value={searchTerm}
         onChange={handleInputChange}

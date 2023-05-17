@@ -1,5 +1,5 @@
 import { City } from "@/types/City";
-import { CityListItem } from "@/components/City/CityListItem";
+import { CityListItem } from "@/components/CityListItem";
 
 export const CityList = ({
   searchLoading,

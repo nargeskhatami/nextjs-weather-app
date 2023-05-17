@@ -1,8 +1,8 @@
 "use client";
 import { useCallback, useEffect, useReducer, useState } from "react";
 
-import { WeatherCard } from "@/components/Weather/WeatherCard/";
-import { WeatherCardAdd } from "@/components/Weather/WeatherCardAdd";
+import { WeatherCard } from "@/components/WeatherCard";
+import { WeatherCardAdd } from "@/components/WeatherCardAdd";
 
 import { Weather, Action } from "@/types/Weather";
 

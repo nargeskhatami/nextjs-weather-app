@@ -11,8 +11,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { City } from "@/types/City";
 
 import { TextField } from "@/components/TextField";
-import { AddButton } from "@/components/Button/AddButton";
-import { CityList } from "@/components/City/CityList/CityList";
+import { AddButton } from "@/components/AddButton";
+import { CityList } from "@/components/CityList";
 
 export const WeatherCardAdd = ({
   onCitySelect,
