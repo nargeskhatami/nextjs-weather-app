@@ -1,8 +1,8 @@
 "use client";
 import { useCallback, useEffect, useReducer, useState } from "react";
 
-import WeatherCard from "./WeatherCard";
-import WeatherCardAdd from "./WeatherCardAdd";
+import { WeatherCard } from "@/components/Weather/WeatherCard/";
+import { WeatherCardAdd } from "@/components/Weather/WeatherCardAdd";
 
 import { Weather, Action } from "@/types/Weather";
 
@@ -23,13 +23,13 @@ const citiesReducer = (state: Weather[], action: Action): Weather[] => {
 const maxCitiesNo = 3;
 const defaultErrorMsg = "Sorry, Weather data is not available at the moment!";
 
-export default function WeatherCardWrapper() {
+export const WeatherContainer = () => {
   const [status, setStatus] = useState<string>("Waiting for user's location ...");
   const [cityWeatherInfoStatus, setCityWeatherInfoStatus] = useState("showData");
   const [cities, dispatch] = useReducer(citiesReducer, []);
   const [selectedCity, setSelectedCity] = useState<string>("");
 
-  const onCitySelect = useCallback((city: string) => {
+  const selectCity = useCallback((city: string) => {
     setSelectedCity(city);
   }, []);
 
@@ -86,7 +86,7 @@ export default function WeatherCardWrapper() {
         <WeatherCardAdd
           key={"WeatherCardAdd"}
           getDataStatus={cityWeatherInfoStatus}
-          onCitySelect={onCitySelect}
+          onCitySelect={selectCity}
         />
       );
     }
@@ -95,4 +95,4 @@ export default function WeatherCardWrapper() {
   }
 
   return content ? <div className="flex">{content}</div> : null;
-}
+};

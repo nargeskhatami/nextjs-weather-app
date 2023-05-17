@@ -1,9 +1,9 @@
-import WeatherCardWrapper from "../components/Weather/WeatherCardWrapper";
+import { WeatherContainer } from "@/components/Weather/WeatherContainer";
 
 export default function Home() {
   return (
     <main className="p-24">
-      <WeatherCardWrapper />
+      <WeatherContainer />
     </main>
   );
 }

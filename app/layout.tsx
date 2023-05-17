@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Loading from "./loading";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 export const metadata = {

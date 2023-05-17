@@ -8,8 +8,7 @@ import { getIconName } from "@/helpers/format/weather";
 import { Daily } from "@/types/Weather";
 import { MetricValues } from "@/enums";
 
-
-export default function WeatherCard({
+export const WeatherCard = ({
   weatherInfo,
   locationInfo,
   onRemoveCity,
@@ -19,7 +18,7 @@ export default function WeatherCard({
   locationInfo: { name: string };
   onRemoveCity: Function;
   index: number;
-}) {
+}) => {
   return (
     <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
       {index > 0 && (
@@ -91,4 +90,4 @@ export default function WeatherCard({
       </div>
     </figure>
   );
-}
+};
