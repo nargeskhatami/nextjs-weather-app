@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import { getWeatherInfo } from "@/helpers/api/weather";
 
 import { Weather } from "@/types/Weather";
@@ -26,9 +28,8 @@ const successCallback = async (position: GeolocationPosition) => {
   const long = position.coords.longitude;
   return new Promise<Weather>(async (resolve, reject) => {
     try {
-      const res = await fetch(`api/city?lat=${lat}&long=${long}`);
-      const city = await res.json();
-      const data = await getWeatherInfo(city);
+      const res = await axios(`api/city?lat=${lat}&long=${long}`);
+      const data = await getWeatherInfo(res.data);
       if (data.timelines.daily.length) {
         resolve(data);
       } else {

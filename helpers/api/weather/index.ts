@@ -1,10 +1,12 @@
+import axios from "axios";
+
 import { Weather } from "@/types/Weather";
+
 export const getWeatherInfo = (city: string) => {
   return new Promise<Weather>((resolve, reject) => {
-    fetch(`api/forecast?location=${city}`)
-      .then((response) => response.json())
-      .then((data:Weather) => {
-        resolve(data);
+    axios(`api/forecast?location=${city}`)
+      .then((res) => {
+        resolve(res.data);
       })
       .catch(() => {
         reject();

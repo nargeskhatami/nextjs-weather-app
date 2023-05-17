@@ -1,4 +1,7 @@
 "use client";
+
+import axios from "axios";
+
 import { useState, useEffect, useRef } from "react";
 
 import { MagnifyingGlassIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
@@ -8,8 +11,8 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { City } from "@/types/City";
 
 import { TextField } from "@/components/TextField";
-import { AddButton } from "../../Button/AddButton";
-import { CityList } from "../../City/CityList/CityList";
+import { AddButton } from "@/components/Button/AddButton";
+import { CityList } from "@/components/City/CityList/CityList";
 
 export const WeatherCardAdd = ({
   onCitySelect,
@@ -33,9 +36,8 @@ export const WeatherCardAdd = ({
 
   const fetchData = async () => {
     try {
-      const res = await fetch(`api/city/search?namePrefix=${searchTerm}`);
-      const items = await res.json();
-      setCities(items);
+      const res = await axios(`api/city/search?namePrefix=${searchTerm}`);
+      setCities(res.data);
       setSearchLoading(false);
     } catch (error) {
       setCities([]);
