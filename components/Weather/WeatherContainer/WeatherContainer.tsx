@@ -94,5 +94,5 @@ export const WeatherContainer = () => {
     content = <div className="text-white/70">{status}</div>;
   }
 
-  return content ? <div className="flex">{content}</div> : null;
+  return content ? <div className="flex flex-wrap justify-center lg:flex-nowrap max-w-[300px] lg:max-w-full">{content}</div> : null;
 };

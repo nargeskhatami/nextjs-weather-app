@@ -110,7 +110,7 @@ export const WeatherCardAdd = ({
     <figure
       className={`flex flex-col items-center justify-${
         showSearchBar ? "center" : "start"
-      } rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2`}
+      } rounded-3xl bg-[#3c4a894d] h-[380px] w-[300px] lg:w-[350px] p-4 lg:mx-2 mb-4 lg:mb-0`}
     >
       {content}
     </figure>

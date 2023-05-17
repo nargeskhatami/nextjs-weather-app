@@ -20,7 +20,7 @@ export const WeatherCard = ({
   index: number;
 }) => {
   return (
-    <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[350px] p-4 mx-2">
+    <figure className="relative flex flex-col justify-between rounded-3xl bg-[#3c4a894d] h-[380px] w-[300px] lg:w-[350px] p-4 lg:mx-2 mb-4 lg:mb-0">
       {index > 0 && (
         <TrashIcon
           onClick={() => {
